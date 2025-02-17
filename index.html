@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fábrica de Carômetros</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <section class="principal">
+        <div class="container1">
+            <h1>Fábrica de Carômetros</h1>
+            <h3>Escolha o nome do seu Carômetro:</h3>
+            <input type="text" id="fileName" placeholder="Nome do arquivo" style="margin: 10px; padding: 5px;">
+            <br>
+            <h3>Selecione as fotos de todos os alunos:</h3>
+            <h5>- Selecione todas as fotos de uma vez; <br> - Nomeie as fotos com o nome do aluno ou funcionário</h5>
+            <input type="file" id="fileInput" multiple accept="image/*">
+            <br><br>
+            <button onclick="generatePDF()">Baixar PDF</button>
+        </div>
+    </section>
+    
+    <div class="container">
+        <div id="carometro" class="grid"></div>
+    </div>
+    
+
+
+    <script>
+        const fileInput = document.getElementById("fileInput");
+        const carometro = document.getElementById("carometro");
+        const { jsPDF } = window.jspdf;
+
+        fileInput.addEventListener("change", function(event) {
+            carometro.innerHTML = ""; // Limpa o carômetro
+            const files = event.target.files;
+            
+            for (const file of files) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        const targetWidth = 300;
+                        const targetHeight = 400;
+                        
+                        const canvas = document.createElement("canvas");
+                        const ctx = canvas.getContext("2d");
+                        canvas.width = targetWidth;
+                        canvas.height = targetHeight;
+                        
+                        // Define a escala para manter a proporção sem perder qualidade
+                        const scale = Math.max(targetWidth / img.width, targetHeight / img.height);
+                        const newWidth = img.width * scale;
+                        const newHeight = img.height * scale;
+                        const offsetX = (targetWidth - newWidth) / 2;
+                        const offsetY = (targetHeight - newHeight) / 2;
+
+                        ctx.fillStyle = "white";
+                        ctx.fillRect(0, 0, targetWidth, targetHeight);
+                        ctx.drawImage(img, offsetX, offsetY, newWidth, newHeight);
+                        
+                        const div = document.createElement("div");
+                        div.classList.add("student");
+                        div.innerHTML = `<img src="${canvas.toDataURL("image/jpeg", 1.0)}" alt="${file.name}"><p style="word-wrap: break-word; max-width: 90px;">${file.name.split(".")[0]}</p>`;
+                        carometro.appendChild(div);
+                    };
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function generatePDF() {
+            const pdf = new jsPDF({ unit: "px", format: [595, 842] });
+            let xStart = (595 - (5 * 100)) / 2; // Centraliza horizontalmente com base em 5 colunas
+            let x = xStart, y = 60;
+            const imgWidth = 62, imgHeight = 85;
+            const marginHorizontal = 0;
+            const maxColumns = 5;
+            pdf.setFontSize(10);
+            
+            document.querySelectorAll(".student").forEach((student, index) => {
+                if (x + imgWidth > 595 - marginHorizontal) { // Se ultrapassar a largura da página, quebra linha
+                    x = xStart;
+                    y += imgHeight + 40;
+                }
+                if (y + imgHeight > 800) { // Se ultrapassar a página, cria uma nova
+                    pdf.addPage();
+                    y = 60;
+                }
+                
+                const img = student.querySelector("img");
+                let name = student.querySelector("p").innerText.trim();
+
+                const nameParts = name.split(" ");
+                    if (nameParts.length > 4) {
+                        name = nameParts.slice(0, 4).join(" "); // Junta até o quarto nome
+                    }
+
+                pdf.addImage(img.src, "JPEG", x, y, imgWidth, imgHeight);
+                pdf.text(name, x + imgWidth / 2, y + imgHeight + 10, { maxWidth: imgWidth, align: "center" });
+                
+                x += imgWidth + 10;
+            });
+            
+            let fileName = document.getElementById("fileName").value.trim();
+            if (!fileName) fileName = "carometro";
+            pdf.save(`${fileName}.pdf`);
+        }
+    </script>
+</body>
+</html>

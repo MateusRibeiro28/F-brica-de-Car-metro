@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+    height: 100vh; /* Ocupa 100% da altura da tela */
+    margin: 0; /* Remove margens padrão */
+    color: rgb(0, 0, 0);
+    
+}
+
+.container {
+    margin-top: -70px;
+    justify-content: center; /* Centraliza horizontalmente */
+    font-size: 10px;
+    word-wrap: break-word;  /* Permite a quebra de linha quando o texto é muito longo */
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(5, 0.1fr); /* Definimos 5 colunas fixas */
+    gap: 2px;
+    justify-items: center;
+    justify-content: center; /* Centraliza horizontalmente */
+}
+
+.student {
+    text-align: center;
+}
+
+.student img {
+    width: 90px;
+    height: 120px;
+    object-fit: contain;
+    background-color: white;
+    border: 1px solid black;
+}
+
+
+
+
+section.principal {
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    display: flex;
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+    height: 100vh; /* Ocupa 100% da altura da tela */
+    margin: 0; /* Remove margens padrão */
+    font-family: Arial, sans-serif; /* Fonte padrão */
+    color: white;
+}
+
+.container1 {
+    font-family: 'Poppins', sans-serif;
+    text-align: center; /* Centraliza o conteúdo interno */
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    background-color: #5900ff;
+}
+
+button{
+    background-color: rgb(255, 255, 255);
+    color: #5900ff;
+    border: 2px solid;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+button:hover{
+    background-color: #b996f8;
+    color: #5900ff;
+
+}
+
+h3{
+    line-height: 1px;
+}
+
+h5{
+    font-size: 12px;
+    font-weight: normal;
+}
